@@ -91,19 +91,139 @@ test &lt;- read.csv(&quot;testDataset.csv&quot;, na.strings = c(&quot;NA&quot;, 
 ## 5580 3797 3422 3216 3607</code></pre>
 <pre class="r"><code>plot(train$classe, main=&quot;Classe variable of the train dataset&quot;, xlab = &quot;Classe&quot;, ylab = &quot;Frequency&quot;)</code></pre>
 <p><img src="data:image/png;base64,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" /></p>
-<div id="loading-the-required-libraries" class="section level4">
-<h4>Loading the required libraries</h4>
+<div id="loading-the-required-libraries-and-cleaning-data" class="section level4">
+<h4>Loading the required libraries and cleaning data</h4>
+<p>To prepare the data for the prediction model the columns with non-measurement values, and near zero variables are eliminated.</p>
 <pre class="r"><code>library(caret)
+library(rpart)
+library(randomForest) 
 library(parallel)
-library(doParallel)</code></pre>
+library(doParallel)
+# Eliminating the non-measurement columns 
+train &lt;- train[,-c(1:7)]
+test &lt;- test[,-c(1:7)]
+# Removing the nesr-zero columns 
+nearZeroCol &lt;- nearZeroVar(train)
+train &lt;- train[,-nearZeroCol]
+# Deleting the columns where more than 95% observations are missing
+t &lt;- nrow(train)*.95
+# extracting the index of columns with less than t missing values
+g &lt;- apply(train, 2, function(x){sum(is.na(x))&lt;= t})
+# if a variable has more than t missing value, it is eliminated
+train &lt;- train[,g]</code></pre>
 </div>
-<div id="partitioning-the-data-for-cross-validation" class="section level3">
-<h3>Partitioning the data for cross validation</h3>
-<p>In order to be able to do the cross validation, the training data is divided into 2 training and validation subsets. For the sake of reproducibility, the seed is set to a constant first.</p>
+<div id="partitioning-the-data-for-cross-validation" class="section level4">
+<h4>Partitioning the data for cross validation</h4>
+<p>In order to be able to do the cross validation, the training data is divided into 2 training and validation subsets. 75% of the observations in the <code>train</code> dataset are used in the training phase and 25% for the cross validation. For the sake of reproducibility, the seed is set to a constant first.</p>
 <pre class="r"><code>set.seed(123)
-partition &lt;- createDataPartition(train$classe, p = 0.8, list = FALSE)
+partition &lt;- createDataPartition(train$classe, p = 0.75, list = FALSE)
 trainingSubset &lt;- train[partition, ]
 validationSubset &lt;- train[-partition, ]</code></pre>
+</div>
+</div>
+<div id="model-training" class="section level2">
+<h2>Model training</h2>
+<p>I have used two models for this project: Decision Tree and Random Forest. The two models are compared in the end to choose the best one.</p>
+<div id="decision-tree" class="section level4">
+<h4>Decision Tree</h4>
+<pre class="r"><code>DTModel &lt;- rpart(classe ~ ., data = trainingSubset, method = &quot;class&quot;)
+DTPrediction &lt;- predict(DTModel, validationSubset, type = &quot;class&quot;)
+confusionMatrix(DTPrediction, validationSubset$classe)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1237  131   16   44   15
+##          B   45  598   72   67   71
+##          C   39  102  683  134  115
+##          D   51   64   65  499   46
+##          E   23   54   19   60  654
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.7486          
+##                  95% CI : (0.7362, 0.7607)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.6817          
+##  Mcnemar's Test P-Value : &lt; 2.2e-16       
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            0.8867   0.6301   0.7988   0.6206   0.7259
+## Specificity            0.9413   0.9355   0.9037   0.9449   0.9610
+## Pos Pred Value         0.8572   0.7011   0.6365   0.6883   0.8074
+## Neg Pred Value         0.9543   0.9134   0.9551   0.9270   0.9397
+## Prevalence             0.2845   0.1935   0.1743   0.1639   0.1837
+## Detection Rate         0.2522   0.1219   0.1393   0.1018   0.1334
+## Detection Prevalence   0.2942   0.1739   0.2188   0.1478   0.1652
+## Balanced Accuracy      0.9140   0.7828   0.8513   0.7828   0.8434</code></pre>
+<p>Cross validation shows an accuracy of 75% for the Decision Tree algotirhm.</p>
+</div>
+<div id="random-forest-model" class="section level4">
+<h4>Random Forest Model</h4>
+<pre class="r"><code>RFModel &lt;- randomForest(classe ~., data = trainingSubset, method = &quot;class&quot;) 
+RFPrediction &lt;- predict(RFModel, validationSubset, type = &quot;class&quot;)
+confusionMatrix(RFPrediction, validationSubset$classe)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1394    1    0    0    0
+##          B    1  946    7    0    0
+##          C    0    2  848    9    0
+##          D    0    0    0  794    1
+##          E    0    0    0    1  900
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9955          
+##                  95% CI : (0.9932, 0.9972)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9943          
+##  Mcnemar's Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            0.9993   0.9968   0.9918   0.9876   0.9989
+## Specificity            0.9997   0.9980   0.9973   0.9998   0.9998
+## Pos Pred Value         0.9993   0.9916   0.9872   0.9987   0.9989
+## Neg Pred Value         0.9997   0.9992   0.9983   0.9976   0.9998
+## Prevalence             0.2845   0.1935   0.1743   0.1639   0.1837
+## Detection Rate         0.2843   0.1929   0.1729   0.1619   0.1835
+## Detection Prevalence   0.2845   0.1945   0.1752   0.1621   0.1837
+## Balanced Accuracy      0.9995   0.9974   0.9945   0.9937   0.9993</code></pre>
+<p>Cross valication accuracy for the Random Forest algorithm is 99.5% and the out of sample error (calculated as <code>1-accuracy</code>) is about 0.5%, which indicate its excellent performance.</p>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>As shown above the Random Forest algorithm outperforms the Decision Tree algorithm. The Random Forest algorithm gained 0.9955 accuracy with 95% CI of (0.9932, 0.9972), while Decision Tree algorithm resulted in accuracy of 0.75 and 95% CI of (0.7362, 0.7607). The Random Forest algorithm is therefore the chosen one.<br />The expected out of sample error is calculated as <code>1 - accuracy</code> when the algorithm is applied on the cross validation dataset. The out of sample error was estimated at 0.5%. Accuracy is defined as the number of misclassifications in the validation dataset over the total number of observations. Therefore, the chance of misclassifying in the test dataset when we have out of sample error of 0.5% is very low.</p>
+</div>
+<div id="prediction-of-the-test-set" class="section level2">
+<h2>Prediction of the test set</h2>
+<p>The Random Forest algorithm is applied on the test set and the following results are obtained.</p>
+<pre class="r"><code>testSetPrediction &lt;- predict(RFModel, test, type = &quot;class&quot;)
+testSetPrediction</code></pre>
+<pre><code>##  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+##  B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+## Levels: A B C D E</code></pre>
+<div id="writing-files-for-submission" class="section level4">
+<h4>Writing files for submission</h4>
+<pre class="r"><code>pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0(&quot;problem_id_&quot;,i,&quot;.txt&quot;)
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+pml_write_files(testSetPrediction)</code></pre>
 </div>
 </div>
 

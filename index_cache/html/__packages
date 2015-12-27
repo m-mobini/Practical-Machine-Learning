@@ -5,3 +5,6 @@ caret
 foreach
 iterators
 doParallel
+rpart
+rpart.plot
+randomForest

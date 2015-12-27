@@ -12,7 +12,7 @@ This project is about using data from accelerometers on the belt, forearm, arm a
 ## Data   
 The data for this project come from this [source](http://groupware.les.inf.puc-rio.br/har).
 The training data are downloadable from [here](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv) and the test data [here](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv). The data sets are downloaded and saved on the lcoal disk, and read into RStudio:  
-```{r, cache=TRUE}
+```{r, cache=F}
 if (!file.exists("trainDataset.csv")) {
 trainDataset <- download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", "trainDataset.csv")
 }
@@ -29,26 +29,76 @@ summary(train$classe)
 plot(train$classe, main="Classe variable of the train dataset", xlab = "Classe", ylab = "Frequency")
 ```
 
-#### Loading the required libraries    
-```{r, cache=TRUE, warning=FALSE, message=FALSE}
+#### Loading the required libraries and cleaning data   
+To prepare the data for the prediction model the columns with non-measurement values, and near zero variables are eliminated. 
+```{r, warning=FALSE, message=FALSE}
 library(caret)
+library(rpart)
+library(randomForest) 
 library(parallel)
 library(doParallel)
+# Eliminating the non-measurement columns 
+train <- train[,-c(1:7)]
+test <- test[,-c(1:7)]
+# Removing the nesr-zero columns 
+nearZeroCol <- nearZeroVar(train)
+train <- train[,-nearZeroCol]
+# Deleting the columns where more than 95% observations are missing
+t <- nrow(train)*.95
+# extracting the index of columns with less than t missing values
+g <- apply(train, 2, function(x){sum(is.na(x))<= t})
+# if a variable has more than t missing value, it is eliminated
+train <- train[,g]
 ```
-### Partitioning the data for cross validation    
-In order to be able to do the cross validation, the training data is divided into 2 training and validation subsets. For the sake of reproducibility, the seed is set to a constant first. 
-```{r, cache=TRUE}
+#### Partitioning the data for cross validation    
+In order to be able to do the cross validation, the training data is divided into 2 training and validation subsets. 75% of the observations in the `train` dataset are used in the training phase and 25% for the cross validation. For the sake of reproducibility, the seed is set to a constant first. 
+```{r, cache=F}
 set.seed(123)
-partition <- createDataPartition(train$classe, p = 0.8, list = FALSE)
+partition <- createDataPartition(train$classe, p = 0.75, list = FALSE)
 trainingSubset <- train[partition, ]
 validationSubset <- train[-partition, ]
 ```
+## Model training 
+I have used two models for this project: Decision Tree and Random Forest. The two models are compared in the end to choose the best one.   
 
+#### Decision Tree 
+```{r, cache=TRUE}
+DTModel <- rpart(classe ~ ., data = trainingSubset, method = "class")
+DTPrediction <- predict(DTModel, validationSubset, type = "class")
+confusionMatrix(DTPrediction, validationSubset$classe)
+```
+Cross validation shows an accuracy of 75% for the Decision Tree algotirhm.
 
+#### Random Forest Model
+```{r}
+RFModel <- randomForest(classe ~., data = trainingSubset, method = "class") 
+RFPrediction <- predict(RFModel, validationSubset, type = "class")
+confusionMatrix(RFPrediction, validationSubset$classe)
+```
+Cross valication accuracy for the Random Forest algorithm is 99.5% and the out of sample error (calculated as `1-accuracy`) is about 0.5%, which indicate its excellent performance. 
 
+## Summary 
+As shown above the Random Forest algorithm outperforms the Decision Tree algorithm. The Random Forest algorithm gained 0.9955 accuracy with 95% CI of (0.9932, 0.9972), while Decision Tree algorithm resulted in accuracy of 0.75 and 95% CI of (0.7362, 0.7607). The Random Forest algorithm is therefore the chosen one.         
+The expected out of sample error is calculated as `1 - accuracy` when the algorithm is applied on the cross validation dataset. The out of sample error was estimated at 0.5%. Accuracy is defined as the number of misclassifications in the validation dataset over the total number of observations. Therefore, the chance of misclassifying in the test dataset when we have out of sample error of 0.5% is very low. 
 
+## Prediction of the test set   
+The Random Forest algorithm is applied on the test set and the following results are obtained. 
+```{r}
+testSetPrediction <- predict(RFModel, test, type = "class")
+testSetPrediction
+```
+#### Writing files for submission 
+```{r}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
 
-
+pml_write_files(testSetPrediction)
+```
 
 
 
